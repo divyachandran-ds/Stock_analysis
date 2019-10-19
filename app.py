@@ -6,11 +6,11 @@ import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 
 
-dff = pd.read_csv("data/AAPL.csv")
-dff1 = pd.read_csv("data/GSPC.csv")
+df_aapl_raw = pd.read_csv("data/AAPL.csv")
+df_spc_raw = pd.read_csv("data/GSPC.csv")
 
-df = dff[2:].reset_index()
-df1 = dff1[:-3].reset_index()
+df = df_aapl_raw[2:].reset_index()
+df1 = df_spc_raw[:-3].reset_index()
 
 df['Year'] = pd.DatetimeIndex(df['Date']).year
 df1['Year'] = pd.DatetimeIndex(df1['Date']).year
@@ -51,7 +51,7 @@ app.layout = html.Div([
     [Input("year selection", 'value'),
      Input("select-range1", 'value'),
      Input("select-range2", 'value')])
-def update_figure(year, range1, range2):
+def update_ma(year, range1, range2):
     dff_apl = df[(df["Year"] >= year[0]) & (df["Year"] <= year[1])]
 
     rolling_mean1 = dff_apl['Adj Close'].rolling(window=range1).mean()
@@ -89,7 +89,7 @@ def update_figure(year, range1, range2):
 @app.callback(
     Output("plot-graph", 'figure'),
     [Input("year selection", 'value')])
-def update_figure(year):
+def update_return(year):
 
     dff_apl = df[(df["Year"] >= year[0]) & (df["Year"] <= year[1])]
     dff_sp = df1[(df1["Year"] >= year[0]) & (df1["Year"] <= year[1])]
